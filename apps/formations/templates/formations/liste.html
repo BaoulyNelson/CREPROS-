@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block titre %}Nos formations{% endblock %}
+{% block contenu %}
+<header class="page-en-tete text-center">
+    <div class="container">
+        <h1>Nos formations</h1>
+        <p class="lead mb-0">Sessions de formation sur les politiques sociales et les droits de l'enfant.</p>
+    </div>
+</header>
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            {% for formation in formations %}
+            <div class="col-md-4">
+                <div class="carte">
+                    {% if formation.image %}<img src="{{ formation.image.url }}" alt="{{ formation.titre }}" loading="lazy">{% endif %}
+                    <div class="p-4">
+                        <span class="badge-categorie">{{ formation.get_statut_display }}</span>
+                        {% if formation.statut == 'a_venir' %}
+                        <span class="small text-success fw-semibold ms-1"><i class="bi bi-hourglass-split"></i> Dans {{ formation.date_debut|timeuntil }}</span>
+                        {% endif %}
+                        <h2 class="h5 mt-3"><a href="{{ formation.get_absolute_url }}" class="text-decoration-none text-dark">{{ formation.titre }}</a></h2>
+                        <p class="small text-secondary mb-1"><i class="bi bi-clock me-1"></i>{{ formation.duree }} — <i class="bi bi-calendar me-1"></i>{{ formation.date_debut|date:"d F Y" }}</p>
+                        <p class="small text-secondary mb-2"><i class="bi bi-person me-1"></i>{{ formation.intervenant }}</p>
+                        <a href="{{ formation.get_absolute_url }}" class="fw-semibold">En savoir plus <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-secondary py-5">Aucune formation programmée pour le moment.</div>
+            {% endfor %}
+        </div>
+        {% include 'partials/pagination.html' %}
+    </div>
+</section>
+{% endblock %}

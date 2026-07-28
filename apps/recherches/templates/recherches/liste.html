@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block titre %}Nos recherches{% endblock %}
+{% block contenu %}
+<header class="page-en-tete text-center">
+    <div class="container">
+        <h1>Nos recherches</h1>
+        <p class="lead mb-0">Recherches théoriques et appliquées sur les politiques sociales et les droits de l'enfant.</p>
+    </div>
+</header>
+
+<section class="py-5">
+    <div class="container">
+        <form method="get" class="row g-2 mb-5">
+            <div class="col-md-6">
+                <input type="text" name="q" value="{{ terme_recherche }}" class="form-control" placeholder="Rechercher une recherche par titre, auteur...">
+            </div>
+            <div class="col-md-4">
+                <select name="categorie" class="form-select">
+                    <option value="">Toutes les catégories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.slug }}" {% if categorie_active == cat.slug %}selected{% endif %}>{{ cat.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search"></i> Filtrer</button>
+            </div>
+        </form>
+
+        <div class="row g-4">
+            {% for recherche in recherches %}
+            <div class="col-md-4">
+                <div class="carte">
+                    {% if recherche.image %}<img src="{{ recherche.image.url }}" alt="{{ recherche.titre }}" loading="lazy">{% endif %}
+                    <div class="p-4">
+                        {% if recherche.categorie %}<span class="badge-categorie">{{ recherche.categorie.nom }}</span>{% endif %}
+                        <h2 class="h5 mt-3"><a href="{{ recherche.get_absolute_url }}" class="text-decoration-none text-dark">{{ recherche.titre }}</a></h2>
+                        <p class="small text-secondary mb-1">Par {{ recherche.auteur }} — {{ recherche.date_publication|date:"d F Y" }}</p>
+                        <p class="text-secondary small">{{ recherche.resume|truncatewords:20 }}</p>
+                        <a href="{{ recherche.get_absolute_url }}" class="fw-semibold">Consulter <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-secondary py-5">Aucune recherche ne correspond à votre requête.</div>
+            {% endfor %}
+        </div>
+
+        {% include 'partials/pagination.html' %}
+    </div>
+</section>
+{% endblock %}

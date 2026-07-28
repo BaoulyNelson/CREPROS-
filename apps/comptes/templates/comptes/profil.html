@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block titre %}Mon profil{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ---------- En-tête du profil (bannière + avatar superposé) ---------- */
+    .profil-banniere {
+        height: 190px;
+        border-radius: var(--rayon);
+        background: linear-gradient(120deg, var(--couleur-primaire-sombre) 0%, var(--couleur-primaire) 60%, var(--couleur-accent) 130%);
+        position: relative;
+        overflow: hidden;
+    }
+    .profil-banniere::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='2' cy='2' r='1.4' fill='white' fill-opacity='0.12'/%3E%3C/svg%3E");
+    }
+    .profil-en-tete {
+        margin-top: -64px;
+        position: relative;
+        z-index: 2;
+    }
+    .profil-avatar-zone {
+        position: relative;
+        width: 128px;
+        flex: 0 0 128px;
+    }
+    .profil-avatar {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid #fff;
+        box-shadow: var(--ombre);
+        background: var(--couleur-fond-clair);
+    }
+    .profil-avatar-defaut {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        border: 5px solid #fff;
+        box-shadow: var(--ombre);
+        background: linear-gradient(135deg, var(--couleur-primaire), var(--couleur-accent));
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+    }
+    .avatar-edit-btn {
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--couleur-primaire);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 3px solid #fff;
+        transition: background .2s ease;
+    }
+    .avatar-edit-btn:hover { background: var(--couleur-primaire-sombre); }
+    .profil-nom { font-size: 1.7rem; margin-bottom: .2rem; }
+    .profil-role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        background: rgba(11, 79, 108, .08);
+        color: var(--couleur-primaire);
+        font-weight: 600;
+        font-size: .78rem;
+        padding: .3rem .8rem;
+        border-radius: 50px;
+    }
+    .profil-meta-item {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        color: var(--couleur-texte-clair);
+        font-size: .88rem;
+    }
+    .profil-meta-item i { color: var(--couleur-primaire); }
+
+    /* ---------- Carte d'infos rapides ---------- */
+    .info-rapide-ligne {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .7rem 0;
+        border-bottom: 1px solid rgba(11,79,108,.07);
+        font-size: .9rem;
+    }
+    .info-rapide-ligne:last-child { border-bottom: none; }
+    .info-rapide-label { color: var(--couleur-texte-clair); }
+    .info-rapide-valeur { font-weight: 600; color: var(--couleur-texte); }
+</style>
+{% endblock %}
+
+{% block contenu %}
+<section class="py-4 py-lg-5">
+    <div class="container">
+
+        <!-- Bannière -->
+        <div class="profil-banniere"></div>
+
+        <!-- En-tête : avatar + nom + rôle -->
+        <div class="profil-en-tete px-3 px-md-4">
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-end gap-3 gap-md-4">
+                <div class="profil-avatar-zone">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" alt="{{ user.get_full_name }}" class="profil-avatar">
+                    {% else %}
+                        <div class="profil-avatar-defaut">
+                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        </div>
+                    {% endif %}
+                    <label for="{{ form.photo.id_for_label }}" class="avatar-edit-btn" title="Changer la photo de profil">
+                        <i class="bi bi-camera-fill"></i>
+                    </label>
+                </div>
+
+                <div class="text-center text-md-start flex-grow-1 pb-md-2">
+                    <h1 class="profil-nom font-titre">{{ user.get_full_name|default:user.username }}</h1>
+                    <div class="d-flex flex-wrap justify-content-center justify-content-md-start align-items-center gap-3 mt-2">
+                        <span class="profil-role-badge">
+                            <i class="bi bi-shield-check"></i> {{ user.get_role_display }}
+                        </span>
+                        <span class="profil-meta-item">
+                            <i class="bi bi-envelope"></i> {{ user.email }}
+                        </span>
+                        {% if user.telephone %}
+                        <span class="profil-meta-item">
+                            <i class="bi bi-telephone"></i> {{ user.telephone }}
+                        </span>
+                        {% endif %}
+                        <span class="profil-meta-item">
+                            <i class="bi bi-calendar3"></i> Membre depuis {{ user.date_creation|date:"F Y" }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="pb-md-2">
+                    <a href="{% url 'comptes:tableau_de_bord' %}" class="btn btn-outline-primary rounded-pill btn-sm px-3">
+                        <i class="bi bi-speedometer2 me-1"></i> Tableau de bord
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu : infos rapides + formulaire -->
+        <div class="row g-4 mt-2">
+            <!-- Colonne infos rapides -->
+            <div class="col-lg-4">
+                <div class="carte p-4 h-100">
+                    <h2 class="h6 font-titre mb-3">Informations du compte</h2>
+                    <div class="info-rapide-ligne">
+                        <span class="info-rapide-label">Nom d'utilisateur</span>
+                        <span class="info-rapide-valeur">{{ user.username }}</span>
+                    </div>
+                    <div class="info-rapide-ligne">
+                        <span class="info-rapide-label">Rôle</span>
+                        <span class="info-rapide-valeur">{{ user.get_role_display }}</span>
+                    </div>
+                    <div class="info-rapide-ligne">
+                        <span class="info-rapide-label">Membre depuis</span>
+                        <span class="info-rapide-valeur">{{ user.date_creation|date:"d/m/Y" }}</span>
+                    </div>
+                    <div class="info-rapide-ligne">
+                        <span class="info-rapide-label">Dernière modification</span>
+                        <span class="info-rapide-valeur">{{ user.date_modification|date:"d/m/Y" }}</span>
+                    </div>
+
+                    <hr class="my-3">
+
+              
+                    <a href="{% url 'comptes:changer_mot_de_passe' %}" class="btn btn-outline-primary rounded-pill w-100 btn-sm">
+                        <i class="bi bi-key me-1"></i> Modifier mon mot de passe
+                    </a>
+                </div>
+            </div>
+
+            <!-- Colonne formulaire -->
+            <div class="col-lg-8">
+                <div class="carte p-4 p-md-5">
+                    <h2 class="h5 font-titre mb-4">Modifier mes informations</h2>
+
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Champ photo : géré via l'icône caméra sur l'avatar -->
+                        <div class="visually-hidden">
+                            {{ form.photo }}
+                            {% if form.photo.errors %}{{ form.photo.errors }}{% endif %}
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
+                                {{ form.first_name }}
+                                {% for erreur in form.first_name.errors %}
+                                    <div class="text-danger small mt-1">{{ erreur }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
+                                {{ form.last_name }}
+                                {% for erreur in form.last_name.errors %}
+                                    <div class="text-danger small mt-1">{{ erreur }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                                {{ form.email }}
+                                {% for erreur in form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ erreur }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.telephone.id_for_label }}" class="form-label">{{ form.telephone.label }}</label>
+                                {{ form.telephone }}
+                                {% for erreur in form.telephone.errors %}
+                                    <div class="text-danger small mt-1">{{ erreur }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{% url 'comptes:tableau_de_bord' %}" class="btn btn-outline-primary rounded-pill px-4">Annuler</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-check-circle me-1"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

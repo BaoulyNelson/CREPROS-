@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block titre %}Nouveau mot de passe{% endblock %}
+
+{% block contenu %}
+<section class="page-en-tete text-center">
+    <div class="container">
+        <h1>Choisir un nouveau mot de passe</h1>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container" style="max-width: 480px;">
+        <div class="carte p-4 p-md-5">
+            {% if validlink %}
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary rounded-pill w-100 mt-3">
+                        <i class="bi bi-check-circle me-1"></i> Enregistrer le nouveau mot de passe
+                    </button>
+                </form>
+            {% else %}
+                <div class="text-center">
+                    <div class="carte-icone mx-auto mb-3" style="background: rgba(220,53,69,.1); color: #dc3545;">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+                    <p class="mb-4">
+                        Ce lien de réinitialisation est invalide ou a déjà été utilisé.
+                        Il a peut-être expiré — vous pouvez en demander un nouveau.
+                    </p>
+                    <a href="{% url 'comptes:mot_de_passe_oublie' %}" class="btn btn-primary rounded-pill">
+                        Demander un nouveau lien
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

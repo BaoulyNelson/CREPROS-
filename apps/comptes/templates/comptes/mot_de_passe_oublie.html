@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block titre %}Mot de passe oublié{% endblock %}
+
+{% block contenu %}
+<section class="page-en-tete text-center">
+    <div class="container">
+        <h1>Mot de passe oublié</h1>
+        <p class="lead mb-0">Réinitialisez l'accès à votre compte</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container" style="max-width: 480px;">
+        <div class="carte p-4 p-md-5">
+            <p class="text-center text-muted mb-4">
+                Indiquez l'adresse email associée à votre compte : nous vous enverrons un lien
+                pour choisir un nouveau mot de passe.
+            </p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary rounded-pill w-100 mt-3">
+                    <i class="bi bi-envelope me-1"></i> Envoyer le lien de réinitialisation
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'comptes:connexion' %}" class="text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i> Retour à la connexion
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

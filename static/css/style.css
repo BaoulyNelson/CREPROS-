@@ -1,0 +1,510 @@
+/* ==========================================================================
+   Site institutionnel — Club de recherche et de formation
+   Palette inspirée des sites d'ONG : bleu institutionnel + orange solidaire
+   ========================================================================== */
+
+:root {
+    --couleur-primaire: #1d6f5e;
+    --couleur-primaire-sombre: #124f42;
+    --couleur-secondaire: #f2994a;
+    --couleur-accent: #1b998b;
+    --couleur-texte: #24313d;
+    --couleur-texte-clair: #6c7a89;
+    --couleur-fond-clair: #f6f9fb;
+    --rayon: 14px;
+    --ombre: 0 10px 30px rgba(11, 79, 108, 0.08);
+}
+
+
+body {
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    color: var(--couleur-texte);
+    background-color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6, .font-titre {
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-weight: 700;
+    color: var(--couleur-primaire-sombre);
+}
+
+a { text-decoration: none; }
+
+/* ---------- Boutons ---------- */
+.btn-primary {
+    background-color: var(--couleur-primaire);
+    border-color: var(--couleur-primaire);
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--couleur-primaire-sombre);
+    border-color: var(--couleur-primaire-sombre);
+}
+.btn-secondaire, .btn-warning {
+    background-color: var(--couleur-secondaire) !important;
+    border-color: var(--couleur-secondaire) !important;
+    color: #fff !important;
+}
+.btn-outline-primary {
+    color: var(--couleur-primaire);
+    border-color: var(--couleur-primaire);
+}
+.btn-outline-primary:hover {
+    background-color: var(--couleur-primaire);
+    border-color: var(--couleur-primaire);
+}
+
+/* ---------- Navbar ---------- */
+.navbar .nav-link {
+    font-weight: 500;
+    color: var(--couleur-texte);
+    margin: 0 .4rem;
+    position: relative;
+}
+.navbar .nav-link:hover, .navbar .nav-link.active {
+    color: var(--couleur-primaire);
+}
+.brand-mark {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--couleur-primaire), var(--couleur-accent));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    font-size: 1.4rem;
+}
+.brand-texte { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-nom { font-family: 'Poppins', sans-serif; font-weight: 700; color: var(--couleur-primaire-sombre); font-size: 1.02rem; }
+.brand-devise { font-size: .72rem; color: var(--couleur-texte-clair); font-style: italic; }
+
+/* ---------- Logo circulaire (navbar) ---------- */
+.brand-logo-cercle {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(11, 79, 108, .1);
+}
+
+/* ---------- Menus déroulants de la navbar ---------- */
+.dropdown-survol .dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(11, 79, 108, 0.14);
+    padding: .5rem;
+    margin-top: .3rem;
+}
+.dropdown-survol .dropdown-item {
+    border-radius: 8px;
+    padding: .55rem .9rem;
+    font-weight: 500;
+    color: var(--couleur-texte);
+}
+.dropdown-survol .dropdown-item:hover,
+.dropdown-survol .dropdown-item:focus {
+    background-color: rgba(11, 79, 108, .07);
+    color: var(--couleur-primaire);
+}
+.dropdown-survol .dropdown-toggle::after {
+    vertical-align: 2px;
+    transition: transform .25s ease;
+}
+
+/* Ouverture au survol sur desktop (≥ lg) uniquement.
+   Sur mobile/tablette, le comportement par défaut de Bootstrap
+   (clic pour ouvrir) reste actif — plus adapté au tactile. */
+@media (min-width: 992px) {
+    .dropdown-survol {
+        position: relative;
+    }
+    .dropdown-survol .dropdown-menu {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity .15s ease .08s, transform .15s ease .08s, visibility 0s linear .23s;
+        pointer-events: none;
+    }
+    /* Pont invisible qui comble l'espace entre le lien et le menu :
+       sans lui, la souris "sort" du lien avant d'atteindre le menu
+       et le survol se coupe net. */
+    .dropdown-survol .dropdown-menu::before {
+        content: "";
+        position: absolute;
+        top: -0.75rem;
+        left: 0;
+        right: 0;
+        height: 0.75rem;
+        visibility: visible;
+        pointer-events: auto;
+    }
+    .dropdown-survol:hover .dropdown-menu,
+    .dropdown-survol .dropdown-menu:hover {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+        transition: opacity .18s ease, transform .18s ease, visibility 0s linear 0s;
+    }
+    /* La flèche pivote quand le menu est ouvert (comme sur capitalbank) */
+    .dropdown-survol:hover .dropdown-toggle::after {
+        transform: rotate(180deg);
+    }
+}
+
+/* ---------- Barre de navigation mobile fixe (style app) ---------- */
+.bottom-nav-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1040;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    background: #fff;
+    border-top: 1px solid rgba(11, 79, 108, .08);
+    box-shadow: 0 -6px 24px rgba(11, 79, 108, .1);
+    padding: .35rem .25rem calc(.35rem + env(safe-area-inset-bottom));
+}
+.bottom-nav-mobile .bn-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: transparent;
+    border: none;
+    color: var(--couleur-texte-clair);
+    font-size: .66rem;
+    font-weight: 600;
+    padding: .4rem 0;
+    text-decoration: none;
+}
+.bottom-nav-mobile .bn-item i {
+    font-size: 1.35rem;
+    line-height: 1;
+}
+.bottom-nav-mobile .bn-item.active {
+    color: var(--couleur-primaire);
+}
+.bottom-nav-mobile .bn-plus i {
+    color: var(--couleur-secondaire);
+}
+
+/* Espace réservé en bas de page pour ne pas cacher le contenu (mobile/tablette uniquement) */
+@media (max-width: 991.98px) {
+    body {
+        padding-bottom: 74px;
+    }
+}
+@media (min-width: 992px) {
+    .bottom-nav-mobile,
+    .panneau-plus {
+        display: none !important;
+    }
+}
+
+/* ---------- Panneau "Plus" (offcanvas bas) ---------- */
+.panneau-plus {
+    border-radius: 20px 20px 0 0;
+    max-height: 78vh;
+}
+.panneau-plus .offcanvas-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: var(--couleur-primaire-sombre);
+}
+.plus-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    text-decoration: none;
+    color: var(--couleur-texte);
+    font-size: .8rem;
+    font-weight: 500;
+}
+.plus-icone {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: rgba(11, 79, 108, .07);
+    color: var(--couleur-primaire);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    transition: background .2s ease, transform .15s ease;
+}
+.plus-item:hover .plus-icone,
+.plus-item:active .plus-icone {
+    background: var(--couleur-primaire);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* ---------- Hero ---------- */
+.hero-section {
+    background: linear-gradient(120deg, var(--couleur-primaire-sombre) 0%, var(--couleur-primaire) 60%, var(--couleur-accent) 130%);
+    color: #fff;
+    padding: 6rem 0 8rem;
+    position: relative;
+    overflow: hidden;
+}
+.hero-section::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='2' cy='2' r='1.4' fill='white' fill-opacity='0.12'/%3E%3C/svg%3E");
+    opacity: .5;
+}
+.hero-section .container { position: relative; z-index: 1; }
+.hero-devise {
+    display: inline-block;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.35);
+    padding: .4rem 1rem;
+    border-radius: 50px;
+    font-size: .9rem;
+    margin-bottom: 1.2rem;
+}
+.hero-section h1 { color: #fff; font-size: clamp(2rem, 4vw, 3.2rem); }
+.hero-section p.lead { color: rgba(255,255,255,.9); }
+
+/* ---------- Sections ---------- */
+.section-titre-tag {
+    color: var(--couleur-secondaire);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: .82rem;
+}
+.section-clair { background-color: var(--couleur-fond-clair); }
+
+/* ---------- Cartes ---------- */
+.carte {
+    background: #fff;
+    border-radius: var(--rayon);
+    box-shadow: var(--ombre);
+    border: 1px solid rgba(11,79,108,.06);
+    transition: transform .25s ease, box-shadow .25s ease;
+    height: 100%;
+}
+.carte:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(11, 79, 108, 0.14);
+}
+.carte img { border-radius: var(--rayon) var(--rayon) 0 0; height: 200px; object-fit: cover; width: 100%; }
+.carte-icone {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: rgba(11,79,108,.08);
+    color: var(--couleur-primaire);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+}
+.badge-categorie {
+    background-color: rgba(27,153,139,.12);
+    color: var(--couleur-accent);
+    font-weight: 600;
+    padding: .35rem .7rem;
+    border-radius: 50px;
+    font-size: .74rem;
+}
+
+/* ---------- Statistiques ---------- */
+.stat-bloc { text-align: center; padding: 1.5rem; }
+.stat-valeur { font-family: 'Poppins', sans-serif; font-size: 2.6rem; font-weight: 800; color: var(--couleur-primaire); }
+.stat-libelle { color: var(--couleur-texte-clair); font-weight: 500; }
+
+/* ---------- Footer ---------- */
+.site-footer { background-color: var(--couleur-primaire-sombre); }
+.footer-brand { font-family: 'Poppins', sans-serif; color: #fff; }
+.footer-titre { color: #fff; font-weight: 600; margin-bottom: 1rem; font-size: .95rem; text-transform: uppercase; letter-spacing: .5px; }
+.footer-liens li { margin-bottom: .5rem; }
+.footer-liens a, .footer-liens { color: rgba(255,255,255,.7); font-size: .92rem; }
+.footer-liens a:hover { color: var(--couleur-secondaire); }
+.footer-liens-inline { color: rgba(255,255,255,.7); }
+.footer-liens-inline:hover { color: var(--couleur-secondaire); }
+.footer-social {
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    border-radius: 50%;
+    transition: background .2s ease;
+}
+.footer-social:hover { background: var(--couleur-secondaire); color: #fff; }
+
+/* ---------- Divers ---------- */
+.page-en-tete {
+    background: linear-gradient(120deg, var(--couleur-primaire-sombre), var(--couleur-primaire));
+    color: #fff;
+    padding: 4rem 0 3rem;
+}
+.page-en-tete h1 { color: #fff; }
+.avatar-equipe { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 50%; }
+.timeline-valeur .carte-icone { margin: 0 auto 1rem; }
+.pagination .page-link { color: var(--couleur-primaire); }
+.pagination .active .page-link { background-color: var(--couleur-primaire); border-color: var(--couleur-primaire); }
+
+img { max-width: 100%; height: auto; }
+
+.footer-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.25);
+    background: #fff; /* utile si le logo a un fond transparent */
+    padding: 4px;
+}
+
+/* ---------- Compte à rebours (formations) ---------- */
+.cr-titre {
+    font-size: .82rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-weight: 700;
+    color: var(--couleur-texte-clair);
+    margin-bottom: 1rem;
+}
+.cr-grille {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .6rem;
+}
+.cr-bloc {
+    background: linear-gradient(160deg, var(--couleur-primaire-sombre), var(--couleur-primaire));
+    border-radius: 12px;
+    color: #fff;
+    text-align: center;
+    padding: .8rem .3rem;
+}
+.cr-valeur {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.7rem;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+.cr-libelle {
+    display: block;
+    font-size: .66rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: rgba(255,255,255,.75);
+    margin-top: .15rem;
+}
+.cr-pastille-live {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #dc3545;
+    display: inline-block;
+    animation: cr-pulse 1.4s ease-in-out infinite;
+}
+@keyframes cr-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220,53,69,.5); }
+    50% { box-shadow: 0 0 0 6px rgba(220,53,69,0); }
+}
+
+/* ==========================================================================
+   Pages d'authentification — layout split-screen (connexion / inscription)
+   ========================================================================== */
+.auth-body {
+    background-color: #fff;
+    min-height: 100vh;
+}
+.auth-messages {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    left: 1rem;
+    z-index: 2000;
+    max-width: 420px;
+    margin-left: auto;
+}
+
+.auth-split {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Panneau de gauche — image/branding, caché en dessous de lg */
+.auth-panel-image {
+    flex: 1 1 45%;
+    position: relative;
+    background: linear-gradient(135deg, var(--couleur-primaire-sombre) 0%, var(--couleur-primaire) 55%, var(--couleur-accent) 130%);
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    overflow: hidden;
+}
+.auth-panel-image::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='2' cy='2' r='1.4' fill='white' fill-opacity='0.12'/%3E%3C/svg%3E");
+    opacity: .5;
+}
+.auth-panel-overlay {
+    position: relative;
+    z-index: 1;
+    max-width: 380px;
+}
+.auth-brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    color: inherit;
+    margin-bottom: 2.5rem;
+}
+.auth-logo {
+    width: 46px;
+    height: 46px;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #fff;
+    padding: 3px;
+}
+.auth-panel-image .auth-logo {
+    border: 2px solid rgba(255,255,255,.35);
+}
+.auth-panel-texte h2 {
+    color: #fff;
+    font-size: 1.9rem;
+    margin-bottom: .75rem;
+}
+.auth-panel-texte p {
+    color: rgba(255,255,255,.85);
+    font-size: 1.02rem;
+}
+
+/* Panneau de droite — formulaire */
+.auth-panel-form {
+    flex: 1 1 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    padding: 2.5rem 1.5rem;
+}
+.auth-form-wrap {
+    width: 100%;
+    max-width: 420px;
+}
+.auth-form-wrap .brand-nom {
+    color: var(--couleur-primaire-sombre);
+    font-weight: 700;
+}
+
+@media (max-width: 991.98px) {
+    .auth-split {
+        flex-direction: column;
+        min-height: auto;
+    }
+    .auth-panel-form {
+        min-height: 100vh;
+    }
+}

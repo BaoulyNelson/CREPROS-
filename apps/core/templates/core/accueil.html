@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titre %}Accueil{% endblock %}
+
+{% block contenu %}
+
+<!-- Hero -->
+<section class="hero-section"
+    {% if parametres_site.image_hero %}style="background-image: url('{{ parametres_site.image_hero.url }}');"{% endif %}>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="hero-devise"><i class="bi bi-quote"></i> {{ devise_organisation }}</span>
+                <h1 class="mb-3">{{ nom_organisation }}</h1>
+                <p class="lead mb-4">
+                    {% if parametres_site.texte_hero %}
+                        {{ parametres_site.texte_hero }}
+                    {% else %}
+                        Contribuer à la recherche sur les politiques sociales et la situation des droits de l'enfant en Haïti,
+                        et sensibiliser par la formation.
+                    {% endif %}
+                </p>
+                {% if parametres_site.texte_appel_action %}
+                    <p class="hero-appel-action mb-3">{{ parametres_site.texte_appel_action }}</p>
+                {% endif %}
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'core:a_propos' %}" class="btn btn-light btn-lg rounded-pill px-4">Découvrir le club</a>
+                    <a href="{% url 'contact:contact' %}" class="btn btn-outline-light btn-lg rounded-pill px-4">Nous contacter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Présentation / Mission / Vision -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="carte p-4 h-100">
+                    <div class="carte-icone mb-3"><i class="bi bi-bullseye"></i></div>
+                    <h3 class="h4">Notre mission</h3>
+                    <p class="text-secondary mb-0">{{ parametres.mission|default:"Contribuer à la recherche sur les politiques sociales et la situation des droits de l'enfant en Haïti." }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="carte p-4 h-100">
+                    <div class="carte-icone mb-3"><i class="bi bi-eye"></i></div>
+                    <h3 class="h4">Notre vision</h3>
+                    <p class="text-secondary mb-0">{{ parametres.vision|default:"La sensibilisation par la formation sur les politiques sociales et les droits de l'enfant." }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Objectifs spécifiques -->
+{% if objectifs_specifiques %}
+<section class="py-5 section-clair">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="section-titre-tag">Nos objectifs</span>
+            <h2>Ce que nous entreprenons</h2>
+        </div>
+        <div class="row g-4">
+            {% for objectif in objectifs_specifiques %}
+            <div class="col-md-6 col-lg-4">
+                <div class="carte p-4 h-100">
+                    <div class="carte-icone mb-3"><i class="bi {{ objectif.icone }}"></i></div>
+                    <h3 class="h5">{{ objectif.titre }}</h3>
+                    <p class="text-secondary mb-0">{{ objectif.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Statistiques -->
+{% if statistiques %}
+<section class="py-5" style="background: var(--couleur-primaire-sombre);">
+    <div class="container py-3">
+        <div class="row">
+            {% for stat in statistiques %}
+            <div class="col-6 col-md-3">
+                <div class="stat-bloc">
+                    <i class="bi {{ stat.icone }} text-white-50 fs-3 mb-2 d-block"></i>
+                    <div class="stat-valeur text-white">{{ stat.valeur }}{{ stat.suffixe }}</div>
+                    <div class="stat-libelle text-white-50">{{ stat.libelle }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Dernières actualités -->
+{% if derniers_articles %}
+<section class="py-5">
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+            <div>
+                <span class="section-titre-tag">Actualités</span>
+                <h2 class="mb-0">Dernières nouvelles</h2>
+            </div>
+            <a href="{% url 'actualites:liste_articles' %}" class="btn btn-outline-primary rounded-pill">Toutes les actualités</a>
+        </div>
+        <div class="row g-4">
+            {% for article in derniers_articles %}
+            <div class="col-md-4">
+                <div class="carte">
+                    {% if article.image_couverture %}
+                        <img src="{{ article.image_couverture.url }}" alt="{{ article.titre }}" loading="lazy">
+                    {% endif %}
+                    <div class="p-4">
+                        {% if article.categorie %}<span class="badge-categorie">{{ article.categorie.nom }}</span>{% endif %}
+                        <h3 class="h5 mt-3"><a href="{{ article.get_absolute_url }}" class="text-decoration-none">{{ article.titre }}</a></h3>
+                        <p class="text-secondary small">{{ article.extrait|truncatewords:18 }}</p>
+                        <a href="{{ article.get_absolute_url }}" class="fw-semibold">Lire l'article <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Prochains événements -->
+{% if prochains_evenements %}
+<section class="py-5 section-clair">
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+            <div>
+                <span class="section-titre-tag">Agenda</span>
+                <h2 class="mb-0">Prochains événements</h2>
+            </div>
+            <a href="{% url 'articles:liste_evenements' %}" class="btn btn-outline-primary rounded-pill">Tous les événements</a>
+        </div>
+        <div class="row g-4">
+            {% for evenement in prochains_evenements %}
+            <div class="col-md-4">
+                <div class="carte">
+                    {% if evenement.image %}<img src="{{ evenement.image.url }}" alt="{{ evenement.titre }}" loading="lazy">{% endif %}
+                    <div class="p-4">
+                        <p class="small text-secondary mb-1"><i class="bi bi-calendar-event me-1"></i>{{ evenement.date_debut|date:"d F Y à H\hi" }}</p>
+                        <h3 class="h5"><a href="{{ evenement.get_absolute_url }}" class="text-decoration-none">{{ evenement.titre }}</a></h3>
+                        <p class="text-secondary small mb-0"><i class="bi bi-geo-alt me-1"></i>{{ evenement.lieu }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Derniers documents -->
+{% if derniers_documents %}
+<section class="py-5">
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+            <div>
+                <span class="section-titre-tag">Bibliothèque</span>
+                <h2 class="mb-0">Derniers documents</h2>
+            </div>
+            <a href="{% url 'documents_app:liste' %}" class="btn btn-outline-primary rounded-pill">Toute la bibliothèque</a>
+        </div>
+        <div class="row g-4">
+            {% for document in derniers_documents %}
+            <div class="col-md-3 col-6">
+                <a href="{{ document.get_absolute_url }}" class="carte p-4 d-block text-decoration-none h-100">
+                    <div class="carte-icone mb-3"><i class="bi bi-file-earmark-pdf"></i></div>
+                    <h3 class="h6 text-dark">{{ document.titre }}</h3>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Appel à l'action -->
+<section class="py-5" style="background: linear-gradient(120deg, var(--couleur-accent), var(--couleur-primaire));">
+    <div class="container py-4 text-center text-white">
+        <h2 class="text-white mb-3">{{ parametres.texte_appel_action|default:"Rejoignez-nous dans la promotion des droits de l'enfant en Haïti" }}</h2>
+        <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg rounded-pill px-4 mt-2">Nous contacter <i class="bi bi-arrow-right"></i></a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block titre %}Mot de passe réinitialisé{% endblock %}
+
+{% block contenu %}
+<section class="page-en-tete text-center">
+    <div class="container">
+        <h1>C'est fait !</h1>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container text-center" style="max-width: 480px;">
+        <div class="carte p-4 p-md-5">
+            <div class="carte-icone mx-auto mb-3" style="background: rgba(27,153,139,.12); color: var(--couleur-accent);">
+                <i class="bi bi-shield-check"></i>
+            </div>
+            <p class="mb-4">
+                Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant
+                vous connecter avec votre nouveau mot de passe.
+            </p>
+            <a href="{% url 'comptes:connexion' %}" class="btn btn-primary rounded-pill">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Se connecter
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

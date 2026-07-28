@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block titre %}{{ formation.titre }}{% endblock %}
+{% block contenu %}
+<header class="page-en-tete">
+    <div class="container">
+        <span class="badge-categorie mb-2">{{ formation.get_statut_display }}</span>
+        <h1>{{ formation.titre }}</h1>
+        <p class="mb-0 text-white-50"><i class="bi bi-person me-1"></i>{{ formation.intervenant }} — <i class="bi bi-clock me-1"></i>{{ formation.duree }}</p>
+    </div>
+</header>
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                {% if formation.image %}<img src="{{ formation.image.url }}" class="rounded-4 mb-4 w-100" alt="{{ formation.titre }}">{% endif %}
+                <h2 class="h4">Description</h2>
+                <p class="text-secondary">{{ formation.description|linebreaks }}</p>
+                <ul class="list-unstyled text-secondary">
+                    <li class="mb-2"><i class="bi bi-calendar-event me-2 text-primary"></i>Du {{ formation.date_debut|date:"d F Y" }}{% if formation.date_fin %} au {{ formation.date_fin|date:"d F Y" }}{% endif %}</li>
+                    {% if formation.lieu %}<li class="mb-2"><i class="bi bi-geo-alt me-2 text-primary"></i>{{ formation.lieu }}</li>{% endif %}
+                    <li class="mb-2"><i class="bi bi-people me-2 text-primary"></i>{{ formation.places_disponibles }} places disponibles</li>
+                </ul>
+            </div>
+            <div class="col-lg-5">
+                {% if formation.statut == 'a_venir' %}
+                <div class="carte p-4 mb-4 compte-rebours" data-date-cible="{{ formation.date_debut|date:'Y-m-d' }}">
+                    <h3 class="cr-titre"><i class="bi bi-hourglass-split me-2"></i>La formation débute dans</h3>
+                    <div class="cr-grille">
+                        <div class="cr-bloc"><span class="cr-valeur" data-cr-jours>00</span><span class="cr-libelle">Jours</span></div>
+                        <div class="cr-bloc"><span class="cr-valeur" data-cr-heures>00</span><span class="cr-libelle">Heures</span></div>
+                        <div class="cr-bloc"><span class="cr-valeur" data-cr-minutes>00</span><span class="cr-libelle">Min</span></div>
+                        <div class="cr-bloc"><span class="cr-valeur" data-cr-secondes>00</span><span class="cr-libelle">Sec</span></div>
+                    </div>
+                    <p class="cr-demarre small text-secondary mb-0 mt-2 d-none">
+                        <i class="bi bi-check-circle text-success me-1"></i>La formation a commencé.
+                    </p>
+                </div>
+                {% elif formation.statut == 'en_cours' %}
+                <div class="carte p-3 mb-4 d-flex align-items-center gap-2">
+                    <span class="cr-pastille-live"></span>
+                    <span class="fw-semibold text-dark">Formation en cours</span>
+                </div>
+                {% endif %}
+
+                <div class="carte p-4">
+                    <h3 class="h5 mb-3">Inscription</h3>
+                    {% if formation.inscriptions_ouvertes %}
+                    <form method="post" action="{% url 'formations:inscription' formation.slug %}">
+                        {% csrf_token %}
+                        {% for champ in formulaire_inscription %}
+                        <div class="mb-3">
+                            <label class="form-label small" for="{{ champ.id_for_label }}">{{ champ.label }}</label>
+                            {{ champ }}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">S'inscrire</button>
+                    </form>
+                    {% else %}
+                    <p class="text-secondary small mb-0">Les inscriptions ne sont pas encore ouvertes pour cette formation.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.compte-rebours').forEach(function (widget) {
+    const dateCible = new Date(widget.dataset.dateCible + 'T00:00:00');
+    const elJours = widget.querySelector('[data-cr-jours]');
+    const elHeures = widget.querySelector('[data-cr-heures]');
+    const elMinutes = widget.querySelector('[data-cr-minutes]');
+    const elSecondes = widget.querySelector('[data-cr-secondes]');
+    const grille = widget.querySelector('.cr-grille');
+    const messageDemarre = widget.querySelector('.cr-demarre');
+
+    function pad(nombre) {
+        return String(nombre).padStart(2, '0');
+    }
+
+    function actualiser() {
+        const maintenant = new Date();
+        const diff = dateCible - maintenant;
+
+        if (diff <= 0) {
+            grille.classList.add('d-none');
+            messageDemarre.classList.remove('d-none');
+            clearInterval(minuteur);
+            return;
+        }
+
+        const jours = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const heures = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const secondes = Math.floor((diff / 1000) % 60);
+
+        elJours.textContent = pad(jours);
+        elHeures.textContent = pad(heures);
+        elMinutes.textContent = pad(minutes);
+        elSecondes.textContent = pad(secondes);
+    }
+
+    actualiser();
+    const minuteur = setInterval(actualiser, 1000);
+});
+</script>
+{% endblock %}

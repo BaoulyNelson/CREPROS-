@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block titre %}Mot de passe modifié{% endblock %}
+
+{% block contenu %}
+<section class="page-en-tete text-center">
+    <div class="container">
+        <h1>Mot de passe modifié</h1>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container" style="max-width: 480px;">
+        <div class="carte p-4 p-md-5 text-center">
+            <div class="carte-icone mx-auto mb-3" style="background: rgba(25,135,84,.1); color: #198754;">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <p class="mb-4">
+                Votre mot de passe a été modifié avec succès.
+            </p>
+            <a href="{% url 'comptes:profil' %}" class="btn btn-primary rounded-pill">
+                Retour à mon profil
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

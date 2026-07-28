@@ -1,0 +1,92 @@
+{% url 'core:accueil' as url_accueil %}
+{% url 'documents_app:liste' as url_documents %}
+{% url 'formations:liste' as url_formations %}
+{% url 'actualites:liste_articles' as url_actualites %}
+
+<!-- Barre de navigation fixe (mobile uniquement) -->
+<nav class="bottom-nav-mobile d-lg-none">
+    <a href="{{ url_accueil }}" class="bn-item {% if request.path == url_accueil %}active{% endif %}">
+        <i class="bi bi-house{% if request.path == url_accueil %}-fill{% endif %}"></i>
+        <span>Accueil</span>
+    </a>
+    <a href="{{ url_documents }}" class="bn-item {% if request.path|slice:':11' == '/documents/' %}active{% endif %}">
+        <i class="bi bi-file-earmark-text{% if request.path|slice:':11' == '/documents/' %}-fill{% endif %}"></i>
+        <span>Documents</span>
+    </a>
+    <a href="{{ url_formations }}" class="bn-item {% if request.path|slice:':13' == '/formations/' %}active{% endif %}">
+        <i class="bi bi-mortarboard{% if request.path|slice:':13' == '/formations/' %}-fill{% endif %}"></i>
+        <span>Formations</span>
+    </a>
+    <a href="{{ url_actualites }}" class="bn-item {% if request.path|slice:':12' == '/actualites/' %}active{% endif %}">
+        <i class="bi bi-newspaper"></i>
+        <span>Actualités</span>
+    </a>
+    <button type="button" class="bn-item bn-plus" data-bs-toggle="offcanvas" data-bs-target="#panneauPlus" aria-controls="panneauPlus">
+        <i class="bi bi-grid-3x3-gap-fill"></i>
+        <span>Plus</span>
+    </button>
+</nav>
+
+<!-- Panneau "Plus" : glisse du bas vers le haut -->
+<div class="offcanvas offcanvas-bottom panneau-plus" tabindex="-1" id="panneauPlus" aria-labelledby="panneauPlusLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="panneauPlusLabel">Explorer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row row-cols-3 g-3 text-center mb-4">
+            <div class="col">
+                <a href="{% url 'core:a_propos' %}" class="plus-item">
+                    <span class="plus-icone"><i class="bi bi-info-circle"></i></span>
+                    <span>À propos</span>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url 'recherches:liste' %}" class="plus-item">
+                    <span class="plus-icone"><i class="bi bi-search"></i></span>
+                    <span>Recherches</span>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url 'actualites:liste_evenements' %}" class="plus-item">
+                    <span class="plus-icone"><i class="bi bi-calendar-event"></i></span>
+                    <span>Événements</span>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url 'galerie:liste' %}" class="plus-item">
+                    <span class="plus-icone"><i class="bi bi-images"></i></span>
+                    <span>Galerie</span>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url 'contact:contact' %}" class="plus-item">
+                    <span class="plus-icone"><i class="bi bi-envelope"></i></span>
+                    <span>Contact</span>
+                </a>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="col">
+                <a href="{% url 'comptes:tableau_de_bord' %}" class="plus-item">
+                    <span class="plus-icone"><i class="bi bi-speedometer2"></i></span>
+                    <span>Mon compte</span>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <hr class="text-secondary">
+
+        <div class="d-grid gap-2">
+            {% if user.is_authenticated %}
+                <a href="{% url 'comptes:deconnexion' %}" class="btn btn-primary rounded-pill">
+                    <i class="bi bi-box-arrow-right me-1"></i> Déconnexion
+                </a>
+            {% else %}
+                <a href="{% url 'comptes:connexion' %}" class="btn btn-primary rounded-pill">
+                    <i class="bi bi-person me-1"></i> Connexion
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>

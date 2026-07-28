@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block titre %}Tableau de bord{% endblock %}
+{% block contenu %}
+<header class="page-en-tete">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h1 class="mb-1">Tableau de bord</h1>
+            <p class="mb-0 text-white-50">Bienvenue, {{ user.get_full_name|default:user.username }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'comptes:profil' %}" class="btn btn-outline-light rounded-pill"><i class="bi bi-person"></i> Mon profil</a>
+            {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}" class="btn btn-light rounded-pill"><i class="bi bi-gear"></i> Administration</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 mb-4">
+            <div class="col-md-4 col-6">
+                <div class="carte p-4">
+                    <div class="carte-icone mb-3"><i class="bi bi-journal-text"></i></div>
+                    <div class="stat-valeur">{{ total_recherches }}</div>
+                    <div class="stat-libelle">Recherches</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="carte p-4">
+                    <div class="carte-icone mb-3"><i class="bi bi-mortarboard"></i></div>
+                    <div class="stat-valeur">{{ total_formations }}</div>
+                    <div class="stat-libelle">Formations</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="carte p-4">
+                    <div class="carte-icone mb-3"><i class="bi bi-newspaper"></i></div>
+                    <div class="stat-valeur">{{ total_articles }}</div>
+                    <div class="stat-libelle">Articles publiés</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="carte p-4">
+                    <div class="carte-icone mb-3"><i class="bi bi-calendar-event"></i></div>
+                    <div class="stat-valeur">{{ total_evenements_a_venir }}</div>
+                    <div class="stat-libelle">Événements à venir</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="carte p-4">
+                    <div class="carte-icone mb-3"><i class="bi bi-file-earmark-pdf"></i></div>
+                    <div class="stat-valeur">{{ total_documents }}</div>
+                    <div class="stat-libelle">Documents</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="carte p-4">
+                    <div class="carte-icone mb-3"><i class="bi bi-envelope"></i></div>
+                    <div class="stat-valeur">{{ messages_non_lus }}</div>
+                    <div class="stat-libelle">Messages non lus</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="carte p-4 h-100">
+                    <h2 class="h5 mb-3"><i class="bi bi-envelope-open me-2 text-primary"></i>Derniers messages de contact</h2>
+                    {% for message in derniers_messages %}
+                        <div class="border-bottom py-2">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ message.nom_complet }}</strong>
+                                <span class="small text-secondary">{{ message.date_envoi|date:"d/m/Y" }}</span>
+                            </div>
+                            <div class="small text-secondary">{{ message.sujet }}</div>
+                        </div>
+                    {% empty %}
+                        <p class="text-secondary small mb-0">Aucun message pour le moment.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="carte p-4 h-100">
+                    <h2 class="h5 mb-3"><i class="bi bi-calendar-check me-2 text-primary"></i>Prochains événements</h2>
+                    {% for evenement in prochains_evenements %}
+                        <div class="border-bottom py-2">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ evenement.titre }}</strong>
+                                <span class="small text-secondary">{{ evenement.date_debut|date:"d/m/Y" }}</span>
+                            </div>
+                            <div class="small text-secondary">{{ evenement.lieu }}</div>
+                        </div>
+                    {% empty %}
+                        <p class="text-secondary small mb-0">Aucun événement à venir.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

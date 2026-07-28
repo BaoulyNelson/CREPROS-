@@ -1,0 +1,79 @@
+{% extends 'base_auth.html' %}
+{% block titre %}Connexion{% endblock %}
+{% block contenu %}
+<div class="auth-split">
+
+    <div class="auth-panel-image d-none d-lg-flex">
+        <div class="auth-panel-overlay">
+            <a href="{% url 'core:accueil' %}" class="auth-brand-link">
+                {% include 'partials/auth_marque.html' %}
+                <span class="brand-texte">
+                    <span class="brand-nom text-white">{{ sigle|default:nom_organisation }}</span>
+                </span>
+            </a>
+            <div class="auth-panel-texte">
+                <h2>Content de vous revoir</h2>
+                <p>{{ devise_organisation }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-panel-form">
+        <div class="auth-form-wrap">
+            <a href="{% url 'core:accueil' %}" class="auth-brand-link d-lg-none mb-4">
+                {% include 'partials/auth_marque.html' %}
+                <span class="brand-nom">{{ sigle|default:nom_organisation }}</span>
+            </a>
+
+            <h1 class="h3 mb-1">Connexion</h1>
+            <p class="text-muted mb-4">Accédez à votre espace</p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+                    {{ form.username }}
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label mb-0" for="{{ form.password.id_for_label }}">Mot de passe</label>
+                        <a href="{% url 'comptes:mot_de_passe_oublie' %}" class="small">Mot de passe oublié ?</a>
+                    </div>
+                    <div class="input-group">
+                        {{ form.password }}
+                        <button class="btn btn-outline-secondary toggle-mdp" type="button" data-cible="{{ form.password.id_for_label }}" aria-label="Afficher le mot de passe">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary w-100 rounded-pill">Se connecter</button>
+            </form>
+
+            <p class="text-center mt-4 mb-0 small">Pas encore de compte ?
+                <a href="{% url 'comptes:inscription' %}">Inscrivez-vous</a>
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.toggle-mdp').forEach(function (bouton) {
+            bouton.addEventListener('click', function () {
+                const champ = document.getElementById(bouton.dataset.cible);
+                const icone = bouton.querySelector('i');
+                const visible = champ.type === 'text';
+                champ.type = visible ? 'password' : 'text';
+                icone.classList.toggle('bi-eye', visible);
+                icone.classList.toggle('bi-eye-slash', !visible);
+            });
+        });
+    });
+</script>
+{% endblock %}

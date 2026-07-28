@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block titre %}À propos{% endblock %}
+
+{% block contenu %}
+<header class="page-en-tete text-center">
+    <div class="container">
+        <h1>À propos de nous</h1>
+        <p class="lead mb-0">{{ devise_organisation }}</p>
+    </div>
+</header>
+
+{% if parametres.histoire %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <span class="section-titre-tag">Notre histoire</span>
+                <h2 class="mb-4">D'où venons-nous</h2>
+                <p class="text-secondary">{{ parametres.histoire|linebreaks }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="py-5 section-clair">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="carte p-4 h-100">
+                    <div class="carte-icone mb-3"><i class="bi bi-bullseye"></i></div>
+                    <h3 class="h4">Mission</h3>
+                    <p class="text-secondary mb-0">{{ parametres.mission }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="carte p-4 h-100">
+                    <div class="carte-icone mb-3"><i class="bi bi-eye"></i></div>
+                    <h3 class="h4">Vision</h3>
+                    <p class="text-secondary mb-0">{{ parametres.vision }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if objectifs_specifiques %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-titre-tag">Nos objectifs spécifiques</span>
+            <h2>Ce que nous entreprenons</h2>
+        </div>
+        <div class="row g-4">
+            {% for objectif in objectifs_specifiques %}
+            <div class="col-md-6 col-lg-4">
+                <div class="carte p-4 h-100">
+                    <div class="carte-icone mb-3"><i class="bi {{ objectif.icone }}"></i></div>
+                    <h3 class="h5">{{ objectif.titre }}</h3>
+                    <p class="text-secondary mb-0">{{ objectif.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if valeurs %}
+<section class="py-5 section-clair">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-titre-tag">Nos valeurs</span>
+            <h2>Ce qui nous guide</h2>
+        </div>
+        <div class="row g-4 timeline-valeur">
+            {% for valeur in valeurs %}
+            <div class="col-md-4 col-6 text-center">
+                <div class="carte-icone mx-auto mb-3"><i class="bi {{ valeur.icone }}"></i></div>
+                <h3 class="h6">{{ valeur.nom }}</h3>
+                <p class="text-secondary small">{{ valeur.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if equipe %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-titre-tag">Notre équipe</span>
+            <h2>Les personnes qui font avancer le club</h2>
+        </div>
+        <div class="row g-4">
+            {% for membre in equipe %}
+            <div class="col-md-3 col-6 text-center" id="membre-{{ membre.pk }}">
+                <img src="{{ membre.photo.url }}" alt="{{ membre.nom_complet }}" class="avatar-equipe mb-3" loading="lazy" style="max-width:150px;">
+                <h3 class="h6 mb-0">{{ membre.nom_complet }}</h3>
+                <p class="text-secondary small">{{ membre.fonction }}</p>
+                {% if membre.linkedin %}<a href="{{ membre.linkedin }}" class="text-primary"><i class="bi bi-linkedin"></i></a>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

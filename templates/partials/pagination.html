@@ -1,0 +1,25 @@
+{% if is_paginated %}
+<nav aria-label="Navigation de pagination" class="mt-5">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.categorie %}categorie={{ request.GET.categorie }}&{% endif %}page={{ page_obj.previous_page_number }}">Précédent</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Précédent</span></li>
+        {% endif %}
+
+        {% for numero in page_obj.paginator.page_range %}
+            {% if numero == page_obj.number %}
+                <li class="page-item active"><span class="page-link">{{ numero }}</span></li>
+            {% elif numero > page_obj.number|add:'-3' and numero < page_obj.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.categorie %}categorie={{ request.GET.categorie }}&{% endif %}page={{ numero }}">{{ numero }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.categorie %}categorie={{ request.GET.categorie }}&{% endif %}page={{ page_obj.next_page_number }}">Suivant</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Suivant</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

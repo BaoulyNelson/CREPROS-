@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block titre %}Email envoyé{% endblock %}
+
+{% block contenu %}
+<section class="page-en-tete text-center">
+    <div class="container">
+        <h1>Vérifiez votre boîte email</h1>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container text-center" style="max-width: 480px;">
+        <div class="carte p-4 p-md-5">
+            <div class="carte-icone mx-auto mb-3">
+                <i class="bi bi-envelope-check"></i>
+            </div>
+            <p class="mb-4">
+                Si un compte existe avec l'adresse email fournie, un message contenant
+                les instructions pour réinitialiser votre mot de passe vient de vous être envoyé.
+                Pensez à vérifier vos spams si vous ne le voyez pas rapidement.
+            </p>
+            <a href="{% url 'comptes:connexion' %}" class="btn btn-outline-primary rounded-pill">
+                <i class="bi bi-arrow-left me-1"></i> Retour à la connexion
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

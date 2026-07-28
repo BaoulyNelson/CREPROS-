@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block titre %}Galerie{% endblock %}
+{% block contenu %}
+<header class="page-en-tete text-center">
+    <div class="container">
+        <h1>Galerie</h1>
+        <p class="lead mb-0">Photos et vidéos de nos activités.</p>
+    </div>
+</header>
+<section class="py-5">
+    <div class="container">
+        <h2 class="h4 mb-4">Albums photo</h2>
+        <div class="row g-4 mb-5">
+            {% for album in albums %}
+            <div class="col-md-4">
+                <a href="{{ album.get_absolute_url }}" class="carte d-block text-decoration-none">
+                    {% if album.image_couverture %}<img src="{{ album.image_couverture.url }}" alt="{{ album.titre }}" loading="lazy">{% endif %}
+                    <div class="p-4">
+                        <h3 class="h5 text-dark">{{ album.titre }}</h3>
+                        <p class="small text-secondary mb-0">{{ album.photos.count }} photo(s)</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-secondary py-3">Aucun album pour le moment.</div>
+            {% endfor %}
+        </div>
+        {% include 'partials/pagination.html' %}
+
+        {% if videos %}
+        <h2 class="h4 mb-4 mt-5">Vidéos</h2>
+        <div class="row g-4">
+            {% for video in videos %}
+            <div class="col-md-4">
+                <div class="carte p-3">
+                    <div class="ratio ratio-16x9 mb-3">
+                        <iframe src="{{ video.url_video }}" title="{{ video.titre }}" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <h3 class="h6">{{ video.titre }}</h3>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

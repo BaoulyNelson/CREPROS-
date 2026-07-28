@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titre %}{{ document.titre }}{% endblock %}
+{% block contenu %}
+<header class="page-en-tete">
+    <div class="container">
+        {% if document.categorie %}<span class="badge-categorie mb-2">{{ document.categorie.nom }}</span>{% endif %}
+        <h1>{{ document.titre }}</h1>
+        <p class="mb-0 text-white-50">Publié le {{ document.date_publication|date:"d F Y" }} — {{ document.taille_fichier }} Ko</p>
+    </div>
+</header>
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="carte-icone mx-auto mb-4" style="width:90px;height:90px;font-size:2.5rem;"><i class="bi bi-file-earmark-pdf"></i></div>
+                <p class="text-secondary">{{ document.description|linebreaks }}</p>
+                <a href="{% url 'documents_app:telecharger' document.slug %}" class="btn btn-primary btn-lg rounded-pill px-5 mt-3">
+                    <i class="bi bi-download"></i> Télécharger ({{ document.nombre_telechargements }} téléchargements)
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

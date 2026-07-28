@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titre %}{{ album.titre }}{% endblock %}
+{% block contenu %}
+<header class="page-en-tete">
+    <div class="container">
+        <h1>{{ album.titre }}</h1>
+        {% if album.description %}<p class="mb-0 text-white-50">{{ album.description }}</p>{% endif %}
+    </div>
+</header>
+<section class="py-5">
+    <div class="container">
+        <div class="row g-3">
+            {% for photo in album.photos.all %}
+            <div class="col-md-3 col-6">
+                <img src="{{ photo.image.url }}" alt="{{ photo.legende }}" class="rounded-3 w-100" style="height:220px;object-fit:cover;" loading="lazy">
+                {% if photo.legende %}<p class="small text-secondary mt-1">{{ photo.legende }}</p>{% endif %}
+            </div>
+            {% empty %}
+            <p class="text-secondary text-center py-4">Cet album ne contient aucune photo pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block titre %}{{ recherche.titre }}{% endblock %}
+{% block meta_description %}{{ recherche.resume|truncatewords:25 }}{% endblock %}
+{% block contenu %}
+<header class="page-en-tete">
+    <div class="container">
+        {% if recherche.categorie %}<span class="badge-categorie mb-2">{{ recherche.categorie.nom }}</span>{% endif %}
+        <h1>{{ recherche.titre }}</h1>
+        <p class="mb-0 text-white-50">Par {{ recherche.auteur }} — {{ recherche.date_publication|date:"d F Y" }}</p>
+    </div>
+</header>
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                {% if recherche.image %}<img src="{{ recherche.image.url }}" class="rounded-4 mb-4 w-100" alt="{{ recherche.titre }}">{% endif %}
+                <h2 class="h4">Résumé</h2>
+                <p class="text-secondary">{{ recherche.resume|linebreaks }}</p>
+                {% if recherche.contenu %}
+                    <h2 class="h4 mt-4">Contenu</h2>
+                    <div class="text-secondary">{{ recherche.contenu|linebreaks }}</div>
+                {% endif %}
+                <a href="{% url 'recherches:telecharger' recherche.slug %}" class="btn btn-primary rounded-pill px-4 mt-4">
+                    <i class="bi bi-download"></i> Télécharger le PDF
+                </a>
+            </div>
+            <div class="col-lg-4">
+                {% if recherches_similaires %}
+                <div class="carte p-4">
+                    <h3 class="h6 mb-3">Recherches similaires</h3>
+                    {% for r in recherches_similaires %}
+                        <a href="{{ r.get_absolute_url }}" class="d-block text-decoration-none text-dark border-bottom py-2 small">{{ r.titre }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block titre %}Bibliothèque documentaire{% endblock %}
+{% block contenu %}
+<header class="page-en-tete text-center">
+    <div class="container">
+        <h1>Bibliothèque documentaire</h1>
+        <p class="lead mb-0">Rapports, guides et textes de référence à télécharger.</p>
+    </div>
+</header>
+<section class="py-5">
+    <div class="container">
+        <form method="get" class="row g-2 mb-5">
+            <div class="col-md-6">
+                <input type="text" name="q" value="{{ terme_recherche }}" class="form-control" placeholder="Rechercher un document...">
+            </div>
+            <div class="col-md-4">
+                <select name="categorie" class="form-select">
+                    <option value="">Toutes les catégories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.slug }}" {% if categorie_active == cat.slug %}selected{% endif %}>{{ cat.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2"><button class="btn btn-primary w-100" type="submit"><i class="bi bi-search"></i> Filtrer</button></div>
+        </form>
+        <div class="row g-4">
+            {% for document in documents %}
+            <div class="col-md-3 col-6">
+                <div class="carte p-4 text-center h-100">
+                    <div class="carte-icone mx-auto mb-3"><i class="bi bi-file-earmark-pdf"></i></div>
+                    <h2 class="h6"><a href="{{ document.get_absolute_url }}" class="text-decoration-none text-dark">{{ document.titre }}</a></h2>
+                    {% if document.categorie %}<span class="badge-categorie">{{ document.categorie.nom }}</span>{% endif %}
+                    <p class="small text-secondary mt-2 mb-0">{{ document.taille_fichier }} Ko</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-secondary py-5">Aucun document ne correspond à votre requête.</div>
+            {% endfor %}
+        </div>
+        {% include 'partials/pagination.html' %}
+    </div>
+</section>
+{% endblock %}

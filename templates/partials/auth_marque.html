@@ -1,0 +1,7 @@
+{% if parametres_site.logo %}
+    <img src="{{ parametres_site.logo.url }}" alt="{{ nom_organisation }}" class="auth-logo">
+{% else %}
+    <span class="brand-mark">
+        <i class="bi bi-heart-fill"></i>
+    </span>
+{% endif %}

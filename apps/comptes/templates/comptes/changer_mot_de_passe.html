@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block titre %}Changer mon mot de passe{% endblock %}
+
+{% block contenu %}
+<section class="page-en-tete text-center">
+    <div class="container">
+        <h1>Changer mon mot de passe</h1>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container" style="max-width: 480px;">
+        <div class="carte p-4 p-md-5">
+            <form method="post" novalidate id="formChangerMdp">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary rounded-pill w-100 mt-3">
+                    <i class="bi bi-check-circle me-1"></i> Enregistrer le nouveau mot de passe
+                </button>
+                <a href="{% url 'comptes:profil' %}" class="btn btn-outline-primary rounded-pill w-100 mt-2">
+                    Annuler
+                </a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Ajoute un bouton "œil" à chaque champ mot de passe généré par crispy
+        document.querySelectorAll('#formChangerMdp input[type="password"]').forEach(function (champ) {
+            const groupe = document.createElement('div');
+            groupe.className = 'input-group';
+            champ.parentNode.insertBefore(groupe, champ);
+            groupe.appendChild(champ);
+
+            const bouton = document.createElement('button');
+            bouton.type = 'button';
+            bouton.className = 'btn btn-outline-secondary toggle-mdp';
+            bouton.setAttribute('aria-label', 'Afficher le mot de passe');
+            bouton.innerHTML = '<i class="bi bi-eye"></i>';
+            groupe.appendChild(bouton);
+        });
+
+        document.querySelectorAll('.toggle-mdp').forEach(function (bouton) {
+            bouton.addEventListener('click', function () {
+                const champ = bouton.previousElementSibling;
+                const icone = bouton.querySelector('i');
+                const visible = champ.type === 'text';
+                champ.type = visible ? 'password' : 'text';
+                icone.classList.toggle('bi-eye', visible);
+                icone.classList.toggle('bi-eye-slash', !visible);
+            });
+        });
+    });
+</script>
+{% endblock %}

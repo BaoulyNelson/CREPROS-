@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /comptes/tableau-de-bord/
+Disallow: /comptes/profil/
+
+Sitemap: /sitemap.xml
