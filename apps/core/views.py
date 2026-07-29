@@ -1,10 +1,14 @@
-"""Vues publiques générales : accueil, à propos, pages d'erreur."""
+"""Vues publiques générales : accueil, à propos, pages d'erreur, tableau de bord."""
 
+from django.contrib import messages
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
 from apps.comptes.models import MembreEquipe
 
+from .forms import FormulairePartenaire
+from .mixins import EditeurRequisMixin
 from .models import (
     ObjectifSpecifique,
     ParametresSite,
@@ -79,3 +83,55 @@ def erreur_404(request, exception=None):
 def erreur_500(request):
     """Page d'erreur 500 personnalisée."""
     return render(request, "core/500.html", status=500)
+
+
+# ── Tableau de bord : Partenaires ─────────────────────────────────────────────
+
+
+class VueDashboardPartenaires(EditeurRequisMixin, ListView):
+    template_name = "dashboard/partenaires/liste.html"
+    context_object_name = "partenaires"
+    queryset = Partenaire.objects.all()
+
+
+class VueDashboardCreerPartenaire(EditeurRequisMixin, CreateView):
+    template_name = "dashboard/partenaires/formulaire.html"
+    form_class = FormulairePartenaire
+    success_url = reverse_lazy("core:dashboard_partenaires")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Partenaire ajouté avec succès !")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["titre_page"] = "Nouveau partenaire"
+        ctx["bouton_submit"] = "Ajouter le partenaire"
+        return ctx
+
+
+class VueDashboardModifierPartenaire(EditeurRequisMixin, UpdateView):
+    template_name = "dashboard/partenaires/formulaire.html"
+    form_class = FormulairePartenaire
+    queryset = Partenaire.objects.all()
+    success_url = reverse_lazy("core:dashboard_partenaires")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Partenaire mis à jour avec succès !")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["titre_page"] = f"Modifier : {self.object.nom}"
+        ctx["bouton_submit"] = "Enregistrer les modifications"
+        return ctx
+
+
+class VueDashboardSupprimerPartenaire(EditeurRequisMixin, DeleteView):
+    template_name = "dashboard/partenaires/confirmer_suppression.html"
+    queryset = Partenaire.objects.all()
+    success_url = reverse_lazy("core:dashboard_partenaires")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Partenaire supprimé avec succès.")
+        return super().form_valid(form)

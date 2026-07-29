@@ -163,6 +163,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "comptes.Utilisateur"
+
+# Permet de se connecter avec le nom d'utilisateur OU l'adresse email.
+# ModelBackend reste en second recours (ex. pour l'admin, les commandes
+# manage.py createsuperuser, etc.).
+AUTHENTICATION_BACKENDS = [
+    "apps.comptes.backends.EmailOuUsernameBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 LOGIN_URL = "comptes:connexion"
 LOGIN_REDIRECT_URL = "comptes:tableau_de_bord"
 LOGOUT_REDIRECT_URL = "core:accueil"

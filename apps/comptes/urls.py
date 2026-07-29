@@ -60,4 +60,14 @@ path(
     ),
     name='changer_mot_de_passe_termine',
 ),
+
+    # ── Tableau de bord : Membres de l'équipe ───────────────────────────────
+    path('tableau-de-bord/equipe/',
+         views.VueDashboardEquipe.as_view(), name='dashboard_equipe'),
+    path('tableau-de-bord/equipe/nouveau/',
+         views.VueDashboardCreerMembreEquipe.as_view(), name='dashboard_creer_membre_equipe'),
+    path('tableau-de-bord/equipe/<int:pk>/modifier/',
+         views.VueDashboardModifierMembreEquipe.as_view(), name='dashboard_modifier_membre_equipe'),
+    path('tableau-de-bord/equipe/<int:pk>/supprimer/',
+         views.VueDashboardSupprimerMembreEquipe.as_view(), name='dashboard_supprimer_membre_equipe'),
 ]

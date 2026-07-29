@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
+from .models import MembreEquipe, Utilisateur
 
 from .models import Utilisateur
 
@@ -34,11 +35,15 @@ class InscriptionForm(UserCreationForm):
 
 
 class ConnexionForm(AuthenticationForm):
-    """Formulaire de connexion stylisé Bootstrap 5."""
+    """Formulaire de connexion stylisé Bootstrap 5, acceptant nom d'utilisateur ou email."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({'class': 'form-control', 'placeholder': "Nom d'utilisateur"})
+        self.fields['username'].label = "Nom d'utilisateur ou email"
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': "Nom d'utilisateur ou email",
+        })
         self.fields['password'].widget.attrs.update({'class': 'form-control', 'placeholder': "Mot de passe"})
 
 
@@ -62,3 +67,35 @@ class ProfilForm(forms.ModelForm):
             'telephone': forms.TextInput(attrs={'class': 'form-control'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+        
+
+class FormulaireMembreEquipe(forms.ModelForm):
+    """Formulaire du tableau de bord pour créer / modifier un membre de l'équipe."""
+
+    class Meta:
+        model = MembreEquipe
+        fields = [
+            "nom_complet", "fonction", "biographie", "photo",
+            "email", "linkedin", "ordre_affichage", "est_actif",
+        ]
+        widgets = {
+            "nom_complet": forms.TextInput(attrs={"class": "form-control", "placeholder": "Nom complet"}),
+            "fonction": forms.TextInput(attrs={"class": "form-control", "placeholder": "Ex : Coordonnateur, Chercheur"}),
+            "biographie": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+            "photo": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "linkedin": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://linkedin.com/in/..."}),
+            "ordre_affichage": forms.NumberInput(attrs={"class": "form-control"}),
+            "est_actif": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+        labels = {
+            "nom_complet": "Nom complet *",
+            "fonction": "Fonction / Poste *",
+            "biographie": "Biographie",
+            "photo": "Photo *",
+            "email": "Email",
+            "linkedin": "LinkedIn",
+            "ordre_affichage": "Ordre d'affichage",
+            "est_actif": "Affiché sur le site",
+        }
+      

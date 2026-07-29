@@ -1,0 +1,49 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block dash_titre %}Photos — {{ album.titre }}{% endblock %}
+{% block dash_contenu %}
+<div class="row">
+  <div class="col-md-5">
+    <div class="dash-card">
+      <div class="dash-card-header"><h5 class="dash-card-title"><i class="fas fa-plus me-2"></i>Ajouter une photo</h5></div>
+      <div class="dash-card-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="invalid-feedback d-block">{{ field.errors.0 }}</div>{% endif %}
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary w-100"><i class="fas fa-upload me-2"></i>Ajouter la photo</button>
+        </form>
+        <a href="{% url 'galerie:dashboard_albums' %}" class="btn btn-outline-secondary w-100 mt-2">
+          <i class="fas fa-arrow-left me-2"></i>Retour aux albums
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <div class="dash-card">
+      <div class="dash-card-header"><h5 class="dash-card-title">Photos de l'album « {{ album.titre }} »</h5></div>
+      <div class="dash-card-body">
+        <div class="row g-3">
+          {% for photo in photos %}
+          <div class="col-6 col-lg-4">
+            <div class="position-relative">
+              <img src="{{ photo.image.url }}" alt="{{ photo.legende }}" class="w-100 rounded" style="height:110px;object-fit:cover">
+              <a href="{% url 'galerie:dashboard_supprimer_photo' photo.pk %}" class="btn btn-xs btn-danger position-absolute top-0 end-0 m-1" title="Supprimer">
+                <i class="fas fa-trash"></i>
+              </a>
+              {% if photo.legende %}<div class="small text-muted mt-1">{{ photo.legende|truncatechars:30 }}</div>{% endif %}
+            </div>
+          </div>
+          {% empty %}
+          <p class="text-muted text-center py-4 mb-0">Aucune photo dans cet album pour le moment.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

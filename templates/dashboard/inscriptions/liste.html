@@ -1,0 +1,53 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block dash_titre %}Inscriptions aux formations{% endblock %}
+{% block dash_contenu %}
+<div class="dash-card">
+  <div class="dash-card-header">
+    <h5 class="dash-card-title"><i class="fas fa-clipboard-list me-2"></i>Inscriptions aux formations</h5>
+  </div>
+  <div class="dash-card-body border-bottom py-2">
+    <form method="get" class="d-flex gap-2 align-items-center">
+      <select name="formation" class="form-select form-select-sm" style="max-width:320px" onchange="this.form.submit()">
+        <option value="">Toutes les formations</option>
+        {% for f in formations %}
+        <option value="{{ f.pk }}" {% if formation_active == f.pk|stringformat:"s" %}selected{% endif %}>{{ f.titre }}</option>
+        {% endfor %}
+      </select>
+      {% if formation_active %}<a href="{% url 'formations:dashboard_inscriptions' %}" class="btn btn-sm btn-outline-secondary">Réinitialiser</a>{% endif %}
+    </form>
+  </div>
+  <div class="dash-card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light"><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Organisation</th><th>Formation</th><th>Inscrit le</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for insc in inscriptions %}
+          <tr>
+            <td class="fw-medium">{{ insc.nom_complet }}</td>
+            <td class="small text-muted">{{ insc.email }}</td>
+            <td class="small text-muted">{{ insc.telephone|default:"—" }}</td>
+            <td class="small text-muted">{{ insc.organisation|default:"—" }}</td>
+            <td><a href="{{ insc.formation.get_absolute_url }}" target="_blank" class="text-decoration-none">{{ insc.formation.titre|truncatechars:35 }}</a></td>
+            <td class="small text-muted">{{ insc.date_inscription|date:"j/m/Y H:i" }}</td>
+            <td>
+              <a href="{% url 'formations:dashboard_supprimer_inscription' insc.pk %}" class="btn btn-xs btn-outline-danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-center text-muted py-4">Aucune inscription.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% if is_paginated %}
+  <div class="dash-card-body border-top">
+    <nav><ul class="pagination pagination-sm justify-content-center mb-0">
+      {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if formation_active %}&formation={{ formation_active }}{% endif %}">&laquo;</a></li>{% endif %}
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if formation_active %}&formation={{ formation_active }}{% endif %}">&raquo;</a></li>{% endif %}
+    </ul></nav>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

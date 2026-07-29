@@ -24,18 +24,9 @@
 <body class="auth-body">
 
     {% if messages %}
-        <div class="conteneur-messages">
+        <div class="auth-messages">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show messages-flash" role="alert">
-                    {% if message.tags == 'success' %}
-                        <i class="fa-solid fa-circle-check"></i> <strong>Succès :</strong>
-                    {% elif message.tags == 'error' or message.tags == 'danger' %}
-                        <i class="fa-solid fa-circle-exclamation"></i> <strong>Échec :</strong>
-                    {% elif message.tags == 'warning' %}
-                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>Attention :</strong>
-                    {% elif message.tags == 'info' %}
-                        <i class="fa-solid fa-circle-info"></i> <strong>Info :</strong>
-                    {% endif %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
                 </div>
@@ -43,7 +34,37 @@
         </div>
     {% endif %}
 
-    {% block contenu %}{% endblock %}
+    <div class="auth-split">
+
+        {# ---------- Panneau gauche : logo, nom, accroche — communs à toutes les pages d'auth ---------- #}
+        <div class="auth-panel-image d-none d-lg-flex">
+            <div class="auth-panel-overlay">
+                <a href="{% url 'core:accueil' %}" class="auth-brand-link">
+                    {% include 'partials/auth_marque.html' %}
+                    <span class="brand-texte">
+                        <span class="brand-nom text-white">{{ sigle|default:nom_organisation }}</span>
+                    </span>
+                </a>
+                <div class="auth-panel-texte">
+                    {% block auth_panel_titre %}<h2>{{ nom_organisation }}</h2>{% endblock %}
+                    {% block auth_panel_texte %}<p>{{ devise_organisation }}</p>{% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {# ---------- Panneau droit : logo mobile + contenu propre à chaque page (formulaire) ---------- #}
+        <div class="auth-panel-form">
+            <div class="auth-form-wrap">
+                <a href="{% url 'core:accueil' %}" class="auth-brand-link d-lg-none mb-4">
+                    {% include 'partials/auth_marque.html' %}
+                    <span class="brand-nom">{{ sigle|default:nom_organisation }}</span>
+                </a>
+
+                {% block contenu %}{% endblock %}
+            </div>
+        </div>
+
+    </div>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>

@@ -1,7 +1,18 @@
-"""Vues publiques de présentation des recherches."""
+"""Vues publiques de présentation des recherches, et tableau de bord."""
+from django.contrib import messages
 from django.http import FileResponse, Http404
-from django.views.generic import DetailView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
+from apps.core.mixins import EditeurRequisMixin, GestionnaireRequisMixin
+
+from .forms import FormulaireCategorieRecherche, FormulaireRecherche
 from .models import CategorieRecherche, Recherche
 
 
@@ -67,3 +78,123 @@ def models_f_incr(recherche):
     Recherche.objects.filter(pk=recherche.pk).update(nombre_telechargements=F('nombre_telechargements') + 1)
     recherche.refresh_from_db(fields=['nombre_telechargements'])
     return recherche.nombre_telechargements
+
+
+# ── Tableau de bord : Recherches ──────────────────────────────────────────────
+
+
+class VueDashboardRecherches(EditeurRequisMixin, ListView):
+    template_name = "dashboard/recherches/liste.html"
+    context_object_name = "recherches"
+    paginate_by = 15
+
+    def get_queryset(self):
+        from django.db.models import Q
+        qs = Recherche.objects.select_related("categorie").order_by("-date_publication")
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            qs = qs.filter(Q(titre__icontains=q) | Q(auteur__icontains=q))
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["q"] = self.request.GET.get("q", "")
+        return ctx
+
+
+class VueDashboardCreerRecherche(EditeurRequisMixin, CreateView):
+    template_name = "dashboard/recherches/formulaire.html"
+    form_class = FormulaireRecherche
+    success_url = reverse_lazy("recherches:dashboard_recherches")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Recherche publiée avec succès !")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Erreur lors de la création. Corrigez les erreurs ci-dessous.")
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["titre_page"] = "Nouvelle recherche"
+        ctx["bouton_submit"] = "Publier la recherche"
+        return ctx
+
+
+class VueDashboardModifierRecherche(EditeurRequisMixin, UpdateView):
+    template_name = "dashboard/recherches/formulaire.html"
+    form_class = FormulaireRecherche
+    queryset = Recherche.objects.all()
+    success_url = reverse_lazy("recherches:dashboard_recherches")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Recherche mise à jour avec succès !")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Erreur lors de la modification.")
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["titre_page"] = f"Modifier : {self.object.titre}"
+        ctx["bouton_submit"] = "Enregistrer les modifications"
+        return ctx
+
+
+class VueDashboardSupprimerRecherche(EditeurRequisMixin, DeleteView):
+    template_name = "dashboard/recherches/confirmer_suppression.html"
+    queryset = Recherche.objects.all()
+    success_url = reverse_lazy("recherches:dashboard_recherches")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Recherche supprimée avec succès.")
+        return super().form_valid(form)
+
+
+class VueDashboardCategoriesRecherche(GestionnaireRequisMixin, ListView):
+    template_name = "dashboard/categories_recherche/liste.html"
+    context_object_name = "categories"
+    queryset = CategorieRecherche.objects.all()
+
+
+class VueDashboardCreerCategorieRecherche(GestionnaireRequisMixin, CreateView):
+    template_name = "dashboard/categories_recherche/formulaire.html"
+    form_class = FormulaireCategorieRecherche
+    success_url = reverse_lazy("recherches:dashboard_categories_recherche")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Catégorie créée avec succès !")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["titre_page"] = "Nouvelle catégorie de recherche"
+        return ctx
+
+
+class VueDashboardModifierCategorieRecherche(GestionnaireRequisMixin, UpdateView):
+    template_name = "dashboard/categories_recherche/formulaire.html"
+    form_class = FormulaireCategorieRecherche
+    queryset = CategorieRecherche.objects.all()
+    success_url = reverse_lazy("recherches:dashboard_categories_recherche")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Catégorie mise à jour !")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["titre_page"] = f"Modifier : {self.object.nom}"
+        return ctx
+
+
+class VueDashboardSupprimerCategorieRecherche(GestionnaireRequisMixin, DeleteView):
+    template_name = "dashboard/categories_recherche/confirmer_suppression.html"
+    queryset = CategorieRecherche.objects.all()
+    success_url = reverse_lazy("recherches:dashboard_categories_recherche")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Catégorie supprimée.")
+        return super().form_valid(form)

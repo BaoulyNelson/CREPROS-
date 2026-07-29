@@ -1,0 +1,60 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block dash_titre %}Recherches{% endblock %}
+{% block dash_contenu %}
+<div class="dash-card">
+  <div class="dash-card-header">
+    <h5 class="dash-card-title"><i class="fas fa-flask me-2"></i>Recherches</h5>
+    <a href="{% url 'recherches:dashboard_creer_recherche' %}" class="btn btn-primary btn-sm">
+      <i class="fas fa-plus me-1"></i>Nouvelle recherche
+    </a>
+  </div>
+  <div class="dash-card-body border-bottom py-2">
+    <form method="get" class="d-flex gap-2">
+      <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:260px" placeholder="Rechercher (titre, auteur)...">
+      <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fas fa-search"></i></button>
+      {% if q %}<a href="?" class="btn btn-sm btn-outline-secondary">Réinitialiser</a>{% endif %}
+    </form>
+  </div>
+  <div class="dash-card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr><th>Titre</th><th>Auteur</th><th>Catégorie</th><th>Publication</th><th>Téléchargements</th><th>Une</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {% for r in recherches %}
+          <tr>
+            <td class="fw-medium">
+              <a href="{{ r.get_absolute_url }}" target="_blank" class="text-decoration-none text-dark">{{ r.titre|truncatechars:50 }}</a>
+            </td>
+            <td class="small text-muted">{{ r.auteur|truncatechars:30 }}</td>
+            <td>{% if r.categorie %}<span class="badge bg-light text-dark border">{{ r.categorie.nom }}</span>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+            <td class="small text-muted">{{ r.date_publication|date:"j/m/Y" }}</td>
+            <td><span class="badge bg-light text-dark border">{{ r.nombre_telechargements }}</span></td>
+            <td>{% if r.est_mise_en_avant %}<span class="badge bg-warning text-dark"><i class="fas fa-star"></i></span>{% endif %}</td>
+            <td>
+              <div class="d-flex gap-1">
+                <a href="{{ r.get_absolute_url }}" target="_blank" class="btn btn-xs btn-outline-info" title="Voir"><i class="fas fa-eye"></i></a>
+                <a href="{% url 'recherches:dashboard_modifier_recherche' r.pk %}" class="btn btn-xs btn-outline-primary" title="Modifier"><i class="fas fa-edit"></i></a>
+                <a href="{% url 'recherches:dashboard_supprimer_recherche' r.pk %}" class="btn btn-xs btn-outline-danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-center text-muted py-4">Aucune recherche trouvée.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% if is_paginated %}
+  <div class="dash-card-body border-top">
+    <nav><ul class="pagination pagination-sm justify-content-center mb-0">
+      {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">&laquo;</a></li>{% endif %}
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}">&raquo;</a></li>{% endif %}
+    </ul></nav>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

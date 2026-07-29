@@ -28,7 +28,7 @@
         <i class="fas fa-tachometer-alt"></i><span>Vue d'ensemble</span>
       </a>
       <div class="dash-nav-section">Contenu</div>
-      <a href="{% url 'articles:dashboard_articles' %}" class="dash-nav-link {% if 'articles' in request.path and 'categories' not in request.path %}active{% endif %}">
+      <a href="{% url 'articles:dashboard_articles' %}" class="dash-nav-link {% if '/articles' in request.path and 'categories' not in request.path %}active{% endif %}">
         <i class="fas fa-newspaper"></i><span>Articles</span>
       </a>
       <a href="{% url 'articles:dashboard_annonces' %}" class="dash-nav-link {% if 'annonces' in request.path %}active{% endif %}">
@@ -37,16 +37,54 @@
       <a href="{% url 'articles:dashboard_evenements' %}" class="dash-nav-link {% if 'evenements' in request.path %}active{% endif %}">
         <i class="fas fa-calendar-alt"></i><span>Événements</span>
       </a>
+      <a href="{% url 'documents_app:dashboard_documents' %}" class="dash-nav-link {% if '/documents/tableau-de-bord/documents' in request.path %}active{% endif %}">
+        <i class="fas fa-file-pdf"></i><span>Documents</span>
+      </a>
+      <a href="{% url 'recherches:dashboard_recherches' %}" class="dash-nav-link {% if '/recherches/tableau-de-bord/recherches' in request.path %}active{% endif %}">
+        <i class="fas fa-flask"></i><span>Recherches</span>
+      </a>
+      <a href="{% url 'formations:dashboard_formations' %}" class="dash-nav-link {% if '/formations/tableau-de-bord/formations' in request.path %}active{% endif %}">
+        <i class="fas fa-chalkboard-teacher"></i><span>Formations</span>
+      </a>
+      <a href="{% url 'formations:dashboard_inscriptions' %}" class="dash-nav-link {% if 'inscriptions' in request.path %}active{% endif %}">
+        <i class="fas fa-clipboard-list"></i><span>Inscriptions</span>
+      </a>
+
+      <div class="dash-nav-section">Galerie</div>
+      <a href="{% url 'galerie:dashboard_albums' %}" class="dash-nav-link {% if '/galerie/tableau-de-bord/albums' in request.path or 'photos' in request.path %}active{% endif %}">
+        <i class="fas fa-images"></i><span>Albums photo</span>
+      </a>
+      <a href="{% url 'galerie:dashboard_videos' %}" class="dash-nav-link {% if 'videos' in request.path %}active{% endif %}">
+        <i class="fas fa-video"></i><span>Vidéos</span>
+      </a>
+
+      <div class="dash-nav-section">Organisation</div>
+      <a href="{% url 'core:dashboard_partenaires' %}" class="dash-nav-link {% if 'partenaires' in request.path %}active{% endif %}">
+        <i class="fas fa-handshake"></i><span>Partenaires</span>
+      </a>
+      <a href="{% url 'comptes:dashboard_equipe' %}" class="dash-nav-link {% if 'equipe' in request.path %}active{% endif %}">
+        <i class="fas fa-users"></i><span>Membres de l'équipe</span>
+      </a>
+
       {% if user.est_administrateur %}
       <div class="dash-nav-section">Administration</div>
-      <a href="{% url 'articles:dashboard_categories' %}" class="dash-nav-link {% if 'categories' in request.path %}active{% endif %}">
-        <i class="fas fa-folder"></i><span>Catégories</span>
+      <a href="{% url 'articles:dashboard_categories' %}" class="dash-nav-link {% if '/actualites/tableau-de-bord/categories' in request.path %}active{% endif %}">
+        <i class="fas fa-folder"></i><span>Catégories d'articles</span>
+      </a>
+      <a href="{% url 'documents_app:dashboard_categories_documents' %}" class="dash-nav-link {% if '/documents/tableau-de-bord/categories' in request.path %}active{% endif %}">
+        <i class="fas fa-folder"></i><span>Catégories de documents</span>
+      </a>
+      <a href="{% url 'recherches:dashboard_categories_recherche' %}" class="dash-nav-link {% if '/recherches/tableau-de-bord/categories' in request.path %}active{% endif %}">
+        <i class="fas fa-folder"></i><span>Catégories de recherche</span>
       </a>
       <a href="{% url 'comments:dashboard_commentaires' %}" class="dash-nav-link {% if 'commentaires' in request.path %}active{% endif %}">
         <i class="fas fa-comments"></i><span>Commentaires</span>
       </a>
       <a href="{% url 'contact:contact' %}" class="dash-nav-link {% if 'messages' in request.path %}active{% endif %}">
         <i class="fas fa-envelope"></i><span>Messages</span>
+      </a>
+      <a href="/admin/" class="dash-nav-link">
+        <i class="fas fa-user-shield"></i><span>Administration système</span>
       </a>
       {% endif %}
       <div class="dash-nav-section">Compte</div>
