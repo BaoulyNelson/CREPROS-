@@ -1,4 +1,4 @@
-# Site institutionnel — Club de Recherche et de Formation sur les Politiques Sociales et les Droits de l'Enfant en Haïti
+# Site institutionnel — centre de Recherche et de Formation sur les Politiques Sociales et les Droits de l'Enfant en Haïti
 
 > **Devise :** « Mieux savoir pour mieux agir. »
 
@@ -36,7 +36,7 @@ de l'enfant en Haïti.
 ## Structure du projet
 
 ```
-club_droits_enfant/
+centre_droits_enfant/
 ├── config/                    # Configuration Django (settings, urls, wsgi, asgi)
 ├── apps/
 │   ├── comptes/                # Authentification, utilisateur personnalisé, tableau de bord, équipe
@@ -115,18 +115,18 @@ Le projet prend en charge deux moteurs, sélectionnables via la variable `DB_MOT
 
 ```env
 DB_MOTEUR=postgresql
-DATABASE_URL=postgres://utilisateur:motdepasse@localhost:5432/club_droits_enfant
+DATABASE_URL=postgres://utilisateur:motdepasse@localhost:5432/centre_droits_enfant
 ```
 
 ### MySQL avec XAMPP (développement local)
 
 1. Démarrer les services **Apache** et **MySQL** depuis le panneau de contrôle XAMPP.
-2. Créer une base de données `club_droits_enfant` via phpMyAdmin (`http://localhost/phpmyadmin`).
+2. Créer une base de données `centre_droits_enfant` via phpMyAdmin (`http://localhost/phpmyadmin`).
 3. Configurer `.env` :
 
 ```env
 DB_MOTEUR=mysql
-DB_NOM=club_droits_enfant
+DB_NOM=centre_droits_enfant
 DB_UTILISATEUR=root
 DB_MOT_DE_PASSE=
 DB_HOTE=127.0.0.1
@@ -199,5 +199,5 @@ refonte majeure :
 
 ## Licence et propriété
 
-Ce projet a été développé sur mesure pour le club de recherche et de formation sur les politiques
+Ce projet a été développé sur mesure pour le centre de recherche et de formation sur les politiques
 sociales et les droits de l'enfant en Haïti. Tous droits réservés.

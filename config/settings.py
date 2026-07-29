@@ -1,5 +1,5 @@
 """
-Configuration Django du projet — Site institutionnel du club de recherche
+Configuration Django du projet — Site institutionnel du centre de recherche
 et de formation sur les politiques sociales et les droits de l'enfant en Haïti.
 
 Toutes les valeurs sensibles sont chargées depuis les variables d'environnement
@@ -33,7 +33,7 @@ CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 # ---------------------------------------------------------------------------
 NOM_ORGANISATION = env(
     "NOM_ORGANISATION",
-    default="Club de Recherche et de Formation sur les Politiques Sociales et les Droits de l'Enfant",
+    default="centre de Recherche et de Formation sur les Politiques Sociales et les Droits de l'Enfant",
 )
 SIGLE_ORGANISATION = env("SIGLE_ORGANISATION", default="CREPROS")
 DEVISE_ORGANISATION = env(
@@ -131,7 +131,7 @@ if DB_MOTEUR == "mysql":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": env("DB_NOM", default="club_droits_enfant"),
+            "NAME": env("DB_NOM", default="centre_droits_enfant"),
             "USER": env("DB_UTILISATEUR", default="root"),
             "PASSWORD": env("DB_MOT_DE_PASSE", default=""),
             "HOST": env("DB_HOTE", default="127.0.0.1"),
@@ -143,7 +143,7 @@ else:
     DATABASES = {
         "default": env.db(
             "DATABASE_URL",
-            default="postgres://postgres:postgres@localhost:5432/club_droits_enfant",
+            default="postgres://postgres:postgres@localhost:5432/centre_droits_enfant",
         )
     }
 

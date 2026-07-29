@@ -34,11 +34,11 @@ class Command(BaseCommand):
 
         if not ParametresSite.objects.exists():
             ParametresSite.objects.create(
-                nom_organisation="Club de Recherche et de Formation sur les Politiques Sociales "
+                nom_organisation="centre de Recherche et de Formation sur les Politiques Sociales "
                 "et les Droits de l'Enfant",
                 sigle="CREPROS",
                 devise="Mieux savoir pour mieux agir.",
-                histoire="Fondé par un groupe de chercheurs et de praticiens engagés, le club est né "
+                histoire="Fondé par un groupe de chercheurs et de praticiens engagés, le centre est né "
                 "du constat que les politiques sociales en Haïti nécessitent une base "
                 "documentaire solide pour mieux protéger les droits de l'enfant.",
                 mission="Contribuer à la recherche sur les politiques sociales et la situation des "
@@ -207,14 +207,12 @@ class Command(BaseCommand):
                     titre=f"Publication du rapport annuel {2023 + i}",
                     auteur=auteur,
                     categorie=categorie,
-                    extrait="Le club publie son rapport annuel sur la situation des droits de l'enfant en Haïti.",
+                    extrait="Le centre publie son rapport annuel sur la situation des droits de l'enfant en Haïti.",
                     contenu="Contenu détaillé de l'article de démonstration...",
-          
                     statut="publie",
                     publie_le=timezone.now() - timedelta(days=10 * i),
                 )
         self.stdout.write("Articles de démonstration créés.")
-
 
     def creer_evenements(self):
         from apps.actualites.models import Evenement
@@ -230,9 +228,6 @@ class Command(BaseCommand):
                     "de la protection de l'enfance en Haïti.",
                 )
         self.stdout.write("Événements de démonstration créés.")
-
-
-
 
     def creer_documents(self):
         from apps.documents_app.models import CategorieDocument, Document

@@ -423,24 +423,20 @@
 
   </div>
   {% if user.is_authenticated %}
-  <div class="cat-panel-footer">
+  <div class="cat-panel-footer cat-panel-footer--actions">
     {% if user.peut_ecrire %}
-    <a href="{% url 'articles:dashboard' %}" class="cat-panel-action">
+    <a href="{% url 'articles:dashboard' %}" class="btn-panel-primary">
       <i class="fas fa-layer-group me-2"></i> Dashboard
     </a>
     {% endif %}
-
-
-
-        {# Après #}
-    <button type="button" class="cat-panel-action cat-panel-action--muted border-0 bg-transparent"
+    <button type="button" class="btn-panel-danger"
             data-bs-toggle="modal" data-bs-target="#modalDeconnexion">
       <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
     </button>
   </div>
   {% else %}
-  <div class="cat-panel-footer">
-    <a href="{% url 'comptes:connexion' %}" class="cat-panel-action">
+  <div class="cat-panel-footer cat-panel-footer--actions">
+    <a href="{% url 'comptes:connexion' %}" class="btn-panel-primary">
       <i class="fas fa-user-plus me-2"></i>Se Connecter
     </a>
   </div>

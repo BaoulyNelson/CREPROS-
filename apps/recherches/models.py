@@ -1,4 +1,5 @@
-"""Modèles liés aux recherches théoriques et appliquées publiées par le club."""
+"""Modèles liés aux recherches théoriques et appliquées publiées par le centre."""
+
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -15,7 +16,7 @@ class CategorieRecherche(models.Model):
     class Meta:
         verbose_name = "Catégorie de recherche"
         verbose_name_plural = "Catégories de recherche"
-        ordering = ['nom']
+        ordering = ["nom"]
 
     def __str__(self):
         return self.nom
@@ -34,23 +35,33 @@ class Recherche(models.Model):
     auteur = models.CharField("Auteur(s)", max_length=255)
     resume = models.TextField("Résumé")
     contenu = RichTextUploadingField("Contenu détaillé", blank=True)
-    image = models.ImageField("Image de couverture", upload_to='recherches/images/', blank=True, null=True)
-    fichier_pdf = models.FileField("Fichier PDF", upload_to='recherches/pdf/')
+    image = models.ImageField(
+        "Image de couverture", upload_to="recherches/images/", blank=True, null=True
+    )
+    fichier_pdf = models.FileField("Fichier PDF", upload_to="recherches/pdf/")
     categorie = models.ForeignKey(
-        CategorieRecherche, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='recherches', verbose_name="Catégorie"
+        CategorieRecherche,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="recherches",
+        verbose_name="Catégorie",
     )
     date_publication = models.DateField("Date de publication")
-    nombre_telechargements = models.PositiveIntegerField("Nombre de téléchargements", default=0, editable=False)
-    est_mise_en_avant = models.BooleanField("Mise en avant sur la page d'accueil", default=False)
+    nombre_telechargements = models.PositiveIntegerField(
+        "Nombre de téléchargements", default=0, editable=False
+    )
+    est_mise_en_avant = models.BooleanField(
+        "Mise en avant sur la page d'accueil", default=False
+    )
     date_creation = models.DateTimeField("Créé le", auto_now_add=True)
     date_modification = models.DateTimeField("Modifié le", auto_now=True)
 
     class Meta:
         verbose_name = "Recherche"
         verbose_name_plural = "Recherches"
-        ordering = ['-date_publication']
-        indexes = [models.Index(fields=['-date_publication'])]
+        ordering = ["-date_publication"]
+        indexes = [models.Index(fields=["-date_publication"])]
 
     def __str__(self):
         return self.titre
@@ -61,4 +72,4 @@ class Recherche(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('recherches:detail', kwargs={'slug': self.slug})
+        return reverse("recherches:detail", kwargs={"slug": self.slug})

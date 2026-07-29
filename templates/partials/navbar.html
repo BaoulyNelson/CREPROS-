@@ -14,9 +14,11 @@
         </a>
 
         <!-- Bouton recherche (mobile uniquement) : remplace le hamburger -->
-        <a class="btn search-toggle-mobile d-lg-none" href="{% url 'recherches:liste' %}" aria-label="Rechercher">
-            <i class="bi bi-search fs-5"></i>
-        </a>
+            <a class="btn search-toggle-mobile d-lg-none"
+            href="{% if request.user.is_authenticated %}{% url 'comptes:profil' %}{% else %}{% url 'comptes:connexion' %}{% endif %}"
+            aria-label="{% if request.user.is_authenticated %}Mon profil{% else %}Se connecter{% endif %}">
+                <i class="bi bi-person-circle fs-5"></i>
+            </a>
 
         <div class="collapse navbar-collapse" id="menuPrincipal">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
