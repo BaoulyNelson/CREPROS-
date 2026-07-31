@@ -125,27 +125,22 @@ import pymysql  # noqa: E402
 
 pymysql.install_as_MySQLdb()
 
-DB_MOTEUR = env("DB_MOTEUR", default="postgresql")  # 'postgresql' ou 'mysql'
+DB_MOTEUR = env("DB_MOTEUR", default="mysql")  # 'postgresql' ou 'mysql'
 
-if DB_MOTEUR == "mysql":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": env("DB_NOM", default="centre_droits_enfant"),
-            "USER": env("DB_UTILISATEUR", default="root"),
-            "PASSWORD": env("DB_MOT_DE_PASSE", default=""),
-            "HOST": env("DB_HOTE", default="127.0.0.1"),
-            "PORT": env("DB_PORT", default="3306"),
-            "OPTIONS": {"charset": "utf8mb4"},
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'club_droits_enfant',   # le nom de ta base MySQL
+        'USER': 'root',                 # ton utilisateur MySQL
+        'PASSWORD': '',                 # ton mot de passe MySQL (vide si aucun)
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
-else:
-    DATABASES = {
-        "default": env.db(
-            "DATABASE_URL",
-            default="postgres://postgres:postgres@localhost:5432/centre_droits_enfant",
-        )
-    }
+}
+DATABASES['default']['OPTIONS'] = {
+    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+}
+
 
 # ---------------------------------------------------------------------------
 # Validation des mots de passe
@@ -243,11 +238,10 @@ GOOGLE_MAPS_EMBED_URL = env("GOOGLE_MAPS_EMBED_URL", default="")
 # ---------------------------------------------------------------------------
 CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
-CKEDITOR_CONFIGS = {
-    "default": {
-        "toolbar": "full",
-        "height": 300,
-        "width": "100%",
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link'],
+        'language': 'fr',
     },
 }
 
@@ -277,6 +271,7 @@ ARTICLES_PAR_PAGE = env("ARTICLES_PAR_PAGE", default=9, cast=int)
 # Messages (Bootstrap 5 alert classes)
 # ---------------------------------------------------------------------------
 from django.contrib.messages import constants as messages_constants  # noqa: E402
+
 
 MESSAGE_TAGS = {
     messages_constants.DEBUG: "secondary",

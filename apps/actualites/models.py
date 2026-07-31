@@ -10,6 +10,10 @@ from django.utils.text import slugify
 from django.utils import timezone
 
 from config import settings
+from django.db import models
+
+def __str__(self):
+    return self.titre
 
 
 def generate_unique_slug(instance, model, slug_field="slug"):
